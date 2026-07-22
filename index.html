@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Veggie Track</title>
+    <style>
+        :root {
+            /* Beet Hummus Platter Palette */
+            --bg-color: #f4f1ea;          /* Warm almond light background */
+            --card-bg: #ffffff;
+            --text-main: #263238;         /* Dark slate text */
+            --text-muted: #607d8b;        /* Muted slate tone */
+            --primary: #c2185b;           /* Rich Beet Magenta */
+            --primary-light: #fce4ec;     /* Light Magenta tint */
+            --accent: #e65100;            /* Carrot Orange */
+            --exercise: #2e7d32;          /* Fresh Herb Green */
+            --exercise-light: #e8f5e9;    /* Soft Green tint */
+            --border: #e0dad0;            /* Warm subtle border */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 16px;
+            padding-bottom: 40px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 26px;
+            color: var(--primary);
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        header p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(38, 50, 56, 0.05);
+            border: 1px solid var(--border);
+        }
+
+        h2 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: var(--text-main);
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Inputs & Grid Form */
+        .grid-inputs {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            background-color: #faf8f5;
+            color: var(--text-main);
+            -webkit-appearance: none;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: #fff;
+        }
+
+        /* Weight Progress Bar */
+        .weight-metrics {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .progress-bar-bg {
+            background-color: var(--border);
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .metric-box {
+            background-color: #faf8f5;
+            border-radius: 12px;
+            padding: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .metric-box.full-width {
+            grid-column: span 2;
+        }
+
+        .metric-title {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .metric-value {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 4px 0;
+            color: var(--text-main);
+        }
+
+        .net-breakdown {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .mini-progress {
+            height: 5px;
+            background-color: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+        .mini-fill {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+        }
+
+        /* Quick Logger Form */
+        .log-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .row-group {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 10px;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: opacity 0.2s;
+        }
+
+        button:active {
+            opacity: 0.85;
+        }
+
+        .btn-exercise {
+            background-color: var(--exercise);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 8px;
+            font-size: 13px;
+        }
+        
+        .btn-secondary:active {
+            background-color: var(--primary-light);
+        }
+
+        /* Custom Panels */
+        .custom-panel {
+            display: none;
+            background-color: #faf8f5;
+            border: 1px dashed var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 10px;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .custom-panel.active {
+            display: flex;
+        }
+
+        /* Food Log List */
+        .log-list {
+            list-style: none;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .log-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        .log-item.exercise-item {
+            border-left: 4px solid var(--exercise);
+            padding-left: 8px;
+        }
+
+        .log-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-details {
+            color: var(--text-muted);
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        .badge-exercise {
+            background-color: var(--exercise-light);
+            color: var(--exercise);
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 4px;
+            text-transform: uppercase;
+        }
+
+        .btn-delete {
+            background: none;
+            color: #d32f2f;
+            border: none;
+            padding: 4px 8px;
+            font-size: 18px;
+            width: auto;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Veggie Track</h1>
+        <p>Daily Vegetarian Nutrition & Exercise Guide</p>
+    </header>
+
+    <!-- Profile & Weight Section -->
+    <div class="card">
+        <h2>Your Profile</h2>
+        <div class="grid-inputs" style="margin-bottom: 16px;">
+            <div class="input-group">
+                <label>Current (lbs)</label>
+                <input type="number" id="currentWeight" value="187" step="0.1">
+            </div>
+            <div class="input-group">
+                <label>Target (lbs)</label>
+                <input type="number" id="targetWeight" value="176" step="0.1">
+            </div>
+            <div class="input-group">
+                <label>Target Kcal</label>
+                <input type="number" id="targetCalories" value="2000">
+            </div>
+        </div>
+        
+        <div class="weight-metrics">
+            <span id="weightProgressText">Goal Progress</span>
+            <span id="weightRemaining" style="font-weight: 600;">--</span>
+        </div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="weightBar"></div>
+        </div>
+    </div>
+
+    <!-- Live Daily Metrics Dashboard -->
+    <div class="card">
+        <h2>Daily Nutrition</h2>
+        <div class="metrics-grid">
+            <div class="metric-box full-width">
+                <div class="metric-title">Net Calories (Food − Exercise)</div>
+                <div class="metric-value"><span id="netKcal">0</span> / <span id="maxKcal">2000</span> kcal</div>
+                <div class="net-breakdown">
+                    Food: <span id="foodKcal">0</span> kcal &nbsp;|&nbsp; Burned: <span id="burnedKcal">0</span> kcal
+                </div>
+                <div class="mini-progress"><div class="mini-fill" id="fillKcal"></div></div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-title">Protein (Target: 60g)</div>
+                <div class="metric-value"><span id="totalProtein">0</span>g</div>
+                <div class="mini-progress"><div class="mini-fill" id="fillProtein"></div></div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-title">Iron (Target: 18mg)</div>
+                <div class="metric-value"><span id="totalIron">0</span>mg</div>
+                <div class="mini-progress"><div class="mini-fill" id="fillIron"></div></div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-title">Calcium (Target: 1000mg)</div>
+                <div class="metric-value"><span id="totalCalcium">0</span>mg</div>
+                <div class="mini-progress"><div class="mini-fill" id="fillCalcium"></div></div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-title">Vitamin B12 (Target: 2.4µg)</div>
+                <div class="metric-value"><span id="totalB12">0</span>µg</div>
+                <div class="mini-progress"><div class="mini-fill" id="fillB12"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Logger Form -->
+    <div class="card">
+        <h2>Log Food</h2>
+        <div class="log-form">
+            <div class="row-group">
+                <select id="foodSelect">
+                    <!-- Loaded dynamically via JS -->
+                </select>
+                <input type="number" id="foodServings" value="1" min="0.1" step="0.5" placeholder="Serv.">
+            </div>
+            <button id="btnAddFood">Add Food to Log</button>
+            <button id="btnToggleCustom" class="btn-secondary">+ Create New Food Item</button>
+            
+            <!-- Hidden Custom Food Form Panel -->
+            <div id="customFoodPanel" class="custom-panel">
+                <div class="input-group">
+                    <label>Food Name</label>
+                    <input type="text" id="customName" placeholder="e.g., Beet Hummus">
+                </div>
+                <div class="grid-inputs">
+                    <div class="input-group">
+                        <label>Calories</label>
+                        <input type="number" id="customKcal" placeholder="0">
+                    </div>
+                    <div class="input-group">
+                        <label>Protein (g)</label>
+                        <input type="number" id="customProtein" placeholder="0" step="0.1">
+                    </div>
+                    <div class="input-group">
+                        <label>Iron (mg)</label>
+                        <input type="number" id="customIron" placeholder="0" step="0.1">
+                    </div>
+                </div>
+                <div class="grid-inputs" style="margin-top: 4px;">
+                    <div class="input-group">
+                        <label>Calcium(mg)</label>
+                        <input type="number" id="customCalcium" placeholder="0">
+                    </div>
+                    <div class="input-group">
+                        <label>B12 (µg)</label>
+                        <input type="number" id="customB12" placeholder="0" step="0.1">
+                    </div>
+                    <div class="input-group" style="justify-content: flex-end;">
+                        <button id="btnSaveCustom" style="padding: 10px; font-size: 13px; background-color: var(--accent);">Save Food</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Log Exercise Card -->
+    <div class="card">
+        <h2>Log Exercise</h2>
+        <div class="log-form">
+            <div class="row-group">
+                <input type="text" id="exerciseName" placeholder="e.g., Running, Workout, Hockey">
+                <input type="number" id="exerciseKcal" placeholder="Burned kcal">
+            </div>
+            <button id="btnAddExercise" class="btn-exercise">Deduct Calories (Add Exercise)</button>
+        </div>
+    </div>
+
+    <!-- Daily Meal & Exercise Log -->
+    <div class="card">
+        <h2>Today's Items <button id="btnClearAll" style="width:auto; padding:2px 8px; font-size:12px; background:#d32f2f;">Reset Day</button></h2>
+        <ul class="log-list" id="logList">
+            <!-- Items added go here -->
+        </ul>
+    </div>
+</div>
+
+<script>
+    const defaultFoods = [
+        { name: "Tofu, firm (100g)", kcal: 144, protein: 17, iron: 2.7, calcium: 680, b12: 0 },
+        { name: "Lentils, cooked (1 cup)", kcal: 230, protein: 18, iron: 6.6, calcium: 38, b12: 0 },
+        { name: "Chickpeas, cooked (1 cup)", kcal: 269, protein: 14.5, iron: 4.7, calcium: 80, b12: 0 },
+        { name: "Black Beans, cooked (1 cup)", kcal: 227, protein: 15.2, iron: 3.6, calcium: 46, b12: 0 },
+        { name: "Seitan / Wheat Gluten (100g)", kcal: 370, protein: 75, iron: 5.2, calcium: 142, b12: 0 },
+        { name: "Peanut Butter, smooth (2 tbsp)", kcal: 191, protein: 7.1, iron: 0.6, calcium: 17, b12: 0 },
+        { name: "Pumpkin Seeds / Pepitas (1 oz)", kcal: 158, protein: 8.6, iron: 2.3, calcium: 12, b12: 0 },
+        { name: "Oats, rolled cooked (1 cup)", kcal: 166, protein: 5.9, iron: 2.1, calcium: 21, b12: 0 },
+        { name: "Broccoli, cooked (1 cup)", kcal: 54, protein: 3.7, iron: 1.1, calcium: 62, b12: 0 },
+        { name: "Greek Yogurt, plain (150g)", kcal: 130, protein: 15, iron: 0, calcium: 150, b12: 0.6 },
+        { name: "Soy Milk, fortified (1 cup)", kcal: 100, protein: 7, iron: 1.2, calcium: 300, b12: 1.2 },
+        { name: "Large Egg (1 cooked)", kcal: 78, protein: 6, iron: 0.6, calcium: 25, b12: 0.6 },
+        { name: "Spinach, raw (2 cups)", kcal: 14, protein: 1.7, iron: 1.6, calcium: 60, b12: 0 },
+        { name: "Quinoa, cooked (1 cup)", kcal: 222, protein: 8, iron: 2.8, calcium: 31, b12: 0 },
+        { name: "Chia Seeds (2 tbsp)", kcal: 138, protein: 4.7, iron: 2.2, calcium: 179, b12: 0 },
+        { name: "Hemp Hearts (3 tbsp)", kcal: 166, protein: 10, iron: 2.4, calcium: 21, b12: 0 }
+    ];
+
+    const targets = { protein: 60, iron: 18, calcium: 1000, b12: 2.4 };
+
+    let userProfile = { current: 187, target: 176, kcalTarget: 2000 };
+    let dailyLog = [];
+    let customFoods = [];
+
+    try {
+        const savedProfile = localStorage.getItem('veg_profile_lbs');
+        if (savedProfile) userProfile = JSON.parse(savedProfile);
+
+        const savedLog = localStorage.getItem('veg_daily_log_lbs');
+        if (savedLog) dailyLog = JSON.parse(savedLog);
+
+        const savedCustom = localStorage.getItem('veg_custom_foods');
+        if (savedCustom) customFoods = JSON.parse(savedCustom);
+    } catch (e) {
+        console.log("Local storage restricted. Using in-memory fallback.");
+    }
+
+    let completeFoodDatabase = [...defaultFoods, ...customFoods];
+
+    window.deleteLogItem = function(id) {
+        dailyLog = dailyLog.filter(item => item.id !== id);
+        try { localStorage.setItem('veg_daily_log_lbs', JSON.stringify(dailyLog)); } catch(e){}
+        updateDashboard();
+    };
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const currentWeightInput = document.getElementById('currentWeight');
+        const targetWeightInput = document.getElementById('targetWeight');
+        const targetCaloriesInput = document.getElementById('targetCalories');
+        const foodSelect = document.getElementById('foodSelect');
+        const foodServings = document.getElementById('foodServings');
+        const btnAddFood = document.getElementById('btnAddFood');
+        const btnAddExercise = document.getElementById('btnAddExercise');
+        const btnClearAll = document.getElementById('btnClearAll');
+        
+        const btnToggleCustom = document.getElementById('btnToggleCustom');
+        const customFoodPanel = document.getElementById('customFoodPanel');
+        const btnSaveCustom = document.getElementById('btnSaveCustom');
+
+        currentWeightInput.value = userProfile.current;
+        targetWeightInput.value = userProfile.target;
+        targetCaloriesInput.value = userProfile.kcalTarget;
+
+        function rebuildFoodDropdown() {
+            foodSelect.innerHTML = "";
+            completeFoodDatabase = [...defaultFoods, ...customFoods];
+            completeFoodDatabase.forEach((food, index) => {
+                let opt = document.createElement('option');
+                opt.value = index;
+                opt.innerHTML = food.name + " — " + food.kcal + " kcal";
+                foodSelect.appendChild(opt);
+            });
+        }
+
+        rebuildFoodDropdown();
+
+        function saveProfile() {
+            userProfile.current = parseFloat(currentWeightInput.value) || 0;
+            userProfile.target = parseFloat(targetWeightInput.value) || 0;
+            userProfile.kcalTarget = parseInt(targetCaloriesInput.value) || 2000;
+            try { localStorage.setItem('veg_profile_lbs', JSON.stringify(userProfile)); } catch(e){}
+            updateDashboard();
+        }
+
+        [currentWeightInput, targetWeightInput, targetCaloriesInput].forEach(input => {
+            input.addEventListener('input', saveProfile);
+        });
+
+        btnAddFood.addEventListener('click', function() {
+            const selectedIndex = foodSelect.value;
+            if(selectedIndex === "" || selectedIndex === null) return;
+            
+            const servings = parseFloat(foodServings.value) || 1;
+            const baseFood = completeFoodDatabase[selectedIndex];
+
+            const logEntry = {
+                id: Date.now(),
+                type: 'food',
+                name: baseFood.name,
+                servings: servings,
+                kcal: Math.round(baseFood.kcal * servings),
+                protein: parseFloat((baseFood.protein * servings).toFixed(1)),
+                iron: parseFloat((baseFood.iron * servings).toFixed(1)),
+                calcium: Math.round(baseFood.calcium * servings),
+                b12: parseFloat((baseFood.b12 * servings).toFixed(2))
+            };
+
+            dailyLog.push(logEntry);
+            try { localStorage.setItem('veg_daily_log_lbs', JSON.stringify(dailyLog)); } catch(e){}
+            updateDashboard();
+            foodServings.value = 1; 
+        });
+
+        btnAddExercise.addEventListener('click', function() {
+            const nameInput = document.getElementById('exerciseName');
+            const kcalInput = document.getElementById('exerciseKcal');
+            
+            const nameVal = nameInput.value.trim() || "Workout";
+            const burnedKcal = parseInt(kcalInput.value) || 0;
+
+            if (burnedKcal <= 0) {
+                alert("Please enter a positive calorie amount burned.");
+                return;
+            }
+
+            const logEntry = {
+                id: Date.now(),
+                type: 'exercise',
+                name: nameVal,
+                kcal: burnedKcal,
+                protein: 0,
+                iron: 0,
+                calcium: 0,
+                b12: 0
+            };
+
+            dailyLog.push(logEntry);
+            try { localStorage.setItem('veg_daily_log_lbs', JSON.stringify(dailyLog)); } catch(e){}
+            updateDashboard();
+            
+            nameInput.value = "";
+            kcalInput.value = "";
+        });
+
+        btnClearAll.addEventListener('click', function() {
+            if(confirm("Clear today's logs?")) {
+                dailyLog = [];
+                try { localStorage.setItem('veg_daily_log_lbs', JSON.stringify(dailyLog)); } catch(e){}
+                updateDashboard();
+            }
+        });
+
+        btnToggleCustom.addEventListener('click', function(e) {
+            e.preventDefault();
+            const visible = customFoodPanel.classList.contains('active');
+            if (visible) {
+                customFoodPanel.classList.remove('active');
+                btnToggleCustom.innerText = '+ Create New Food Item';
+            } else {
+                customFoodPanel.classList.add('active');
+                btnToggleCustom.innerText = '× Cancel Custom Food';
+            }
+        });
+
+        btnSaveCustom.addEventListener('click', function(e) {
+            e.preventDefault();
+            const nameVal = document.getElementById('customName').value.trim();
+            const kcalVal = parseInt(document.getElementById('customKcal').value) || 0;
+            const proteinVal = parseFloat(document.getElementById('customProtein').value) || 0;
+            const ironVal = parseFloat(document.getElementById('customIron').value) || 0;
+            const calciumVal = parseInt(document.getElementById('customCalcium').value) || 0;
+            const b12Val = parseFloat(document.getElementById('customB12').value) || 0;
+
+            if (!nameVal) {
+                alert("Please enter a food name.");
+                return;
+            }
+
+            const newFood = {
+                name: nameVal + " (Custom)",
+                kcal: kcalVal,
+                protein: proteinVal,
+                iron: ironVal,
+                calcium: calciumVal,
+                b12: b12Val
+            };
+
+            customFoods.push(newFood);
+            try { localStorage.setItem('veg_custom_foods', JSON.stringify(customFoods)); } catch(e){}
+            
+            rebuildFoodDropdown();
+            foodSelect.value = completeFoodDatabase.length - 1;
+
+            document.getElementById('customName').value = "";
+            document.getElementById('customKcal').value = "";
+            document.getElementById('customProtein').value = "";
+            document.getElementById('customIron').value = "";
+            document.getElementById('customCalcium').value = "";
+            document.getElementById('customB12').value = "";
+            
+            customFoodPanel.classList.remove('active');
+            btnToggleCustom.innerText = '+ Create New Food Item';
+            updateDashboard();
+        });
+
+        updateDashboard();
+    });
+
+    function updateDashboard() {
+        const logList = document.getElementById('logList');
+        if(!logList) return;
+
+        const current = userProfile.current;
+        const target = userProfile.target;
+        const remaining = (current - target).toFixed(1);
+        
+        if (remaining <= 0) {
+            document.getElementById('weightRemaining').innerText = "Goal Hit! 🎉";
+            document.getElementById('weightBar').style.width = "100%";
+        } else {
+            document.getElementById('weightRemaining').innerText = remaining + " lbs left";
+            let progressPercent = Math.max(0, Math.min(100, (100 - (remaining * 5)))); 
+            document.getElementById('weightBar').style.width = progressPercent + "%";
+        }
+
+        let totals = { foodKcal: 0, exerciseKcal: 0, protein: 0, iron: 0, calcium: 0, b12: 0 };
+        logList.innerHTML = "";
+
+        dailyLog.forEach(item => {
+            if (item.type === 'exercise') {
+                totals.exerciseKcal += item.kcal;
+            } else {
+                totals.foodKcal += item.kcal;
+                totals.protein += item.protein;
+                totals.iron += item.iron;
+                totals.calcium += item.calcium;
+                totals.b12 += item.b12;
+            }
+
+            let li = document.createElement('li');
+            
+            if (item.type === 'exercise') {
+                li.className = "log-item exercise-item";
+                li.innerHTML = "\
+                    <div>\
+                        <div><strong>" + item.name + "</strong> <span class='badge-exercise'>Exercise</span></div>\
+                        <div class='item-details' style='color: var(--exercise); font-weight:600;'>-" + item.kcal + " kcal burned</div>\
+                    </div>\
+                    <button class='btn-delete' onclick='window.deleteLogItem(" + item.id + ")'>×</button>\
+                ";
+            } else {
+                li.className = "log-item";
+                li.innerHTML = "\
+                    <div>\
+                        <div><strong>" + item.name + "</strong> (x" + item.servings + ")</div>\
+                        <div class='item-details'>" + item.kcal + " kcal | P: " + item.protein + "g | Fe: " + item.iron + "mg | Ca: " + item.calcium + "mg | B12: " + item.b12 + "µg</div>\
+                    </div>\
+                    <button class='btn-delete' onclick='window.deleteLogItem(" + item.id + ")'>×</button>\
+                ";
+            }
+
+            logList.appendChild(li);
+        });
+
+        const netCalories = totals.foodKcal - totals.exerciseKcal;
+
+        document.getElementById('netKcal').innerText = netCalories;
+        document.getElementById('foodKcal').innerText = totals.foodKcal;
+        document.getElementById('burnedKcal').innerText = totals.exerciseKcal;
+        document.getElementById('maxKcal').innerText = userProfile.kcalTarget;
+
+        document.getElementById('totalProtein').innerText = totals.protein.toFixed(1);
+        document.getElementById('totalIron').innerText = totals.iron.toFixed(1);
+        document.getElementById('totalCalcium').innerText = totals.calcium;
+        document.getElementById('totalB12').innerText = totals.b12.toFixed(1);
+
+        const netPercentage = Math.max(0, Math.min(100, (netCalories / userProfile.kcalTarget) * 100));
+        document.getElementById('fillKcal').style.width = netPercentage + "%";
+        document.getElementById('fillProtein').style.width = Math.min(100, (totals.protein / targets.protein) * 100) + "%";
+        document.getElementById('fillIron').style.width = Math.min(100, (totals.iron / targets.iron) * 100) + "%";
+        document.getElementById('fillCalcium').style.width = Math.min(100, (totals.calcium / targets.calcium) * 100) + "%";
+        document.getElementById('fillB12').style.width = Math.min(100, (totals.b12 / targets.b12) * 100) + "%";
+    }
+</script>
+</body>
+</html>

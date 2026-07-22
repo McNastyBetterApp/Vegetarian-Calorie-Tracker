@@ -6,16 +6,16 @@
     <title>Veggie Track</title>
     <style>
         :root {
-            /* Beet Hummus Platter Palette */
+            /* Flipped Beet Hummus Platter Palette */
             --bg-color: #f4f1ea;          /* Warm almond light background */
             --card-bg: #ffffff;
             --text-main: #263238;         /* Dark slate text */
             --text-muted: #607d8b;        /* Muted slate tone */
-            --primary: #c2185b;           /* Rich Beet Magenta */
-            --primary-light: #fce4ec;     /* Light Magenta tint */
+            --primary: #2e7d32;           /* Fresh Herb Green (Now Primary) */
+            --primary-light: #e8f5e9;     /* Soft Green tint */
             --accent: #e65100;            /* Carrot Orange */
-            --exercise: #2e7d32;          /* Fresh Herb Green */
-            --exercise-light: #e8f5e9;    /* Soft Green tint */
+            --beet-accent: #c2185b;       /* Rich Beet Magenta (Now Secondary/Exercise Accent) */
+            --beet-light: #fce4ec;        /* Light Magenta tint */
             --border: #e0dad0;            /* Warm subtle border */
         }
 
@@ -128,7 +128,7 @@
         }
 
         .progress-bar-fill {
-            background: linear-gradient(90deg, var(--accent), var(--primary));
+            background-color: var(--primary);
             height: 100%;
             width: 0%;
             transition: width 0.4s ease;
@@ -172,7 +172,7 @@
         }
 
         .mini-progress {
-            height: 5px;
+            height: 6px;
             background-color: var(--border);
             border-radius: 3px;
             overflow: hidden;
@@ -181,8 +181,9 @@
 
         .mini-fill {
             height: 100%;
-            background-color: var(--primary);
+            background-color: var(--primary); /* Green fill up to 100% */
             width: 0%;
+            transition: width 0.4s ease;
         }
 
         /* Quick Logger Form */
@@ -216,7 +217,7 @@
         }
 
         .btn-exercise {
-            background-color: var(--exercise);
+            background-color: var(--beet-accent);
         }
 
         .btn-secondary {
@@ -264,7 +265,7 @@
         }
 
         .log-item.exercise-item {
-            border-left: 4px solid var(--exercise);
+            border-left: 4px solid var(--beet-accent);
             padding-left: 8px;
         }
 
@@ -279,8 +280,8 @@
         }
 
         .badge-exercise {
-            background-color: var(--exercise-light);
-            color: var(--exercise);
+            background-color: var(--beet-light);
+            color: var(--beet-accent);
             font-size: 10px;
             font-weight: 700;
             padding: 2px 6px;
@@ -689,7 +690,7 @@
                 li.innerHTML = "\
                     <div>\
                         <div><strong>" + item.name + "</strong> <span class='badge-exercise'>Exercise</span></div>\
-                        <div class='item-details' style='color: var(--exercise); font-weight:600;'>-" + item.kcal + " kcal burned</div>\
+                        <div class='item-details' style='color: var(--beet-accent); font-weight:600;'>-" + item.kcal + " kcal burned</div>\
                     </div>\
                     <button class='btn-delete' onclick='window.deleteLogItem(" + item.id + ")'>×</button>\
                 ";
@@ -719,6 +720,7 @@
         document.getElementById('totalCalcium').innerText = totals.calcium;
         document.getElementById('totalB12').innerText = totals.b12.toFixed(1);
 
+        /* Progress bars calculate up to 100% using Green fill */
         const netPercentage = Math.max(0, Math.min(100, (netCalories / userProfile.kcalTarget) * 100));
         document.getElementById('fillKcal').style.width = netPercentage + "%";
         document.getElementById('fillProtein').style.width = Math.min(100, (totals.protein / targets.protein) * 100) + "%";
